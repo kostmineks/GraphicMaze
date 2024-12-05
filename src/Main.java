@@ -1,12 +1,10 @@
-import java.io.IOException;
-
 public class Main {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
         boolean way = false;
         if(way)
         {
-            String filename = "res/lav7.txt";
+            String filename = "res/lav1.txt";
             Maze.maze(filename);
         }
         else

@@ -25,10 +25,11 @@ public class Maze implements Drawing {
     private static final int WALL = -11;
     private static final int EXIT = -99;
 
-
-    private final Color WALLColor = Color.BLACK;
-    private final Color EXITColor = new Color(0 , 1, 0 , 1);
-    private final Color PATHColor = Color.WHITE;
+    private final Color BACKGROUND = Color.hsb(0, 0, 0.3);
+    private final Color WALLColor = Color.hsb(0, 0, 0);
+    private final Color EXITColor = Color.hsb(120, 1, 1);
+    private final Color WAYColor = Color.hsb(0,0,1);
+    private final Color PATHColor = Color.hsb(50, 1, 1);
 
 
     private static int dim;
@@ -50,13 +51,11 @@ public class Maze implements Drawing {
         if(save && !saved)
         {
             saved = true;
-            try {
-                save();
-            } catch (IOException _){}
+            save();
         }
 
         //Iscrtavanje lavirinta
-        DrawingUtils.clear(view, Color.BLACK);
+        DrawingUtils.clear(view, BACKGROUND);
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if (lab[i][j] == EXIT)
@@ -64,7 +63,7 @@ public class Maze implements Drawing {
                 else if (lab[i][j] == WALL)
                     view.setFill(WALLColor);
                 else
-                    view.setFill(PATHColor);
+                    view.setFill(WAYColor);
                 view.fillRect(new Vector(dim, dim).mul(new Vector(j - x / 2, y / 2 - i - 1)), new Vector(dim));
             }
         }
@@ -77,7 +76,7 @@ public class Maze implements Drawing {
 
         if(time <= timeMax - 2)
         {
-            double l = m / (timeMax - 2.0);//   polja u sekundi
+            double l = m / (timeMax - 2.0);//   broj polja u sekundi
             m = (int) (time * l);//   polja za trenutno vreme
         }
 
@@ -86,7 +85,7 @@ public class Maze implements Drawing {
             Point p = path.get(i);
             if(p.isPut())
             {
-                view.setFill(Color.YELLOW);
+                view.setFill(PATHColor);
                 if(time > timeMax - 2)
                     view.setFill(EXITColor);
             }
@@ -98,19 +97,24 @@ public class Maze implements Drawing {
         }
     }
 
-    public static void  maze(String filename) throws Exception
+    public static void maze(String filename)
     {
         Resolve resMaze = new Resolve(filename);
         maze(resMaze);
     }
-    public static void maze(int y, int x) throws Exception
+    public static void maze(int y, int x)
+    {
+        Resolve resMaze = new Resolve(y, x);
+        maze(resMaze);
+    }
+    public static void maze(int y, int x, long seed)
     {
         //seed - 115205115129181198L, 150, 150 / 15,15
-        Resolve resMaze = new Resolve(y,x);
+        Resolve resMaze = new Resolve(y, x, seed);
         maze(resMaze);
     }
 
-    private static void maze(Resolve maze) throws Exception
+    private static void maze(Resolve maze)
     {
         lab = maze.getLab();
         x = maze.getX();
@@ -121,24 +125,27 @@ public class Maze implements Drawing {
         DrawingApplication.launch(x * dim, y * dim);
     }
 
-    private void save() throws IOException {
+    private void save(){
         int n = 1;
         String path = "res/lav";
         while(new File(path + n + ".txt").exists())
         {
             n++;
         }
-
-        BufferedWriter bw = new BufferedWriter(new FileWriter(path + n + ".txt"));
-        bw.write(x + " " + y + "\n" );
-        for(int i = 0; i < y; i++)
+        try
         {
-            for (int j = 0; j < x; j++)
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path + n + ".txt"));
+            bw.write(x + " " + y + "\n" );
+            for(int i = 0; i < y; i++)
             {
-                bw.write(lab[i][j] + " ");
+                for (int j = 0; j < x; j++)
+                {
+                    bw.write(lab[i][j] + " ");
+                }
+                bw.newLine();
             }
-            bw.newLine();
-        }
-        bw.close();
+            bw.close();
+        }catch (IOException _){}
+
     }
 }

@@ -8,12 +8,12 @@ public class Generate {
     private final int x;// x -> j
     public final int[][] rule = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}};//   matrica koja nam sluzi za nasumican pravac
 
-    private void init()//   Inicijalizujemo boolean matricu za 2 polja vecu u sirinu i duzinu i svim poljima dodeljujemo false koji oznacava zid
+    private void genLabInit()//   Inicijalizujemo boolean matricu za 2 polja vecu u sirinu i duzinu i svim poljima dodeljujemo false koji oznacava zid
     {
         genLab = new boolean[y + 2][x + 2];
-        for(int i = 1; i <= y; i++)
+        for(int i = 0; i < y + 2; i++)
         {
-            for(int j = 1; j <= x; j++)
+            for(int j = 0; j < x + 2; j++)
             {
                 genLab[i][j] = false;
             }
@@ -25,7 +25,7 @@ public class Generate {
         return i < 1 || i > y || j < 1 || j > x;
     }
 
-    private boolean checkWall(int i, int j) // true ima vise od 1 nule u okruenju
+    private boolean checkWall(int i, int j) // true ima vise od 1 nule u okruzenju
     {
         return  (genLab[i - 1][j] ? 1 : 0) +
                 (genLab[i + 1][j] ? 1 : 0) +
@@ -47,7 +47,6 @@ public class Generate {
         generate(i + rule[r + 1][0], j + rule[r + 1][1], rng);
         generate(i + rule[r + 2][0], j + rule[r + 2][1], rng);
         generate(i + rule[r + 3][0], j + rule[r + 3][1], rng);
-        //minecraft pecina
     }
 
     private void translate()//   Pretvara boolean matricu u int matricu sa vrednostima -11 : zid, -99 : izlaz, 0 : put
@@ -63,11 +62,13 @@ public class Generate {
 
     public Generate(int x, int y)
     {
-//        long seed = 115205115129181198L;
         this.x = x;
         this.y = y;
-        init();
+        genLabInit();
         RNG rng = new RNG();
+        long seed = rng.nextLong();
+        System.out.println("Seed: " + seed);
+        rng = new RNG(seed);
         generate(1, 1, rng);
         translate();
     }
@@ -76,7 +77,7 @@ public class Generate {
     {
         this.x = x;
         this.y = y;
-        init();
+        genLabInit();
         RNG rng = new RNG(seed);
         generate(1, 1, rng);
         translate();

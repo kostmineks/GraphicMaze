@@ -10,14 +10,13 @@ public class Resolve {
     private int x;
     private int y;
 
-    private int[][] lab;//   Matrica iz fajla
+    private int[][] lab;//   Matrica lavirinta
     private boolean[][] visited;//   Matrica posecenosti
 
     private List<Point> path = new ArrayList<Point>();
     private List<Point> res;
-    private boolean have = false;
 
-    private void visitedInit()//   Inicijalizuje celu matricu posecenosti na flase
+    private void visitedInit()//   Inicijalizuje celu matricu posecenosti na false
     {
         for(int i = 0; i < y; i++)
         {
@@ -28,7 +27,7 @@ public class Resolve {
         }
     }
 
-    private boolean checkBounds(int i, int j)//true - van granica je, false - unutar granica je
+    private boolean checkBounds(int i, int j)//true - polje je van granica, false - polje je unutar granica
     {
         return i < 0 || i >= y || j < 0 || j >= x;
     }
@@ -48,7 +47,7 @@ public class Resolve {
 
         if(lab[i][j] == EXIT)
         {
-            if(res == null || res.size() > path.size())
+            if(res == null)
                 res = new ArrayList<Point>(path);
         }
 
@@ -67,13 +66,17 @@ public class Resolve {
 //
 //      KONSTRUKTORI i GETERI
 //
-    public Resolve(String filename) throws Exception//   konstruktor - ucitava lavirint - resava ga - postavlja da se trazi najkraci put
+    public Resolve(String filename)//   konstruktor - ucitava lavirint - resava ga
     {
         load(filename);
-        solve(0, 0, path, visited);
+        try {
+            solve(0, 0, path, visited);
+        }catch(StackOverflowError e) {
+            System.out.println("Stack Overflow Resolve");
+        }
     }
 
-    public Resolve(int y, int x) throws Exception
+    public Resolve(int y, int x)
     {
         this.y = y;
         this.x = x;
@@ -81,12 +84,32 @@ public class Resolve {
         lab = new int[y][x];
         visited = new boolean[y][x];
         visitedInit();
-
         Generate gen = new Generate(x, y);
         lab = gen.getLavirint();
 
-        //save();
-        solve(0, 0, path, visited);
+        try {
+            solve(0, 0, path, visited);
+        }catch(StackOverflowError e) {
+            System.out.println("Stack Overflow Resolve");
+        }
+    }
+
+    public Resolve(int y, int x, long seed)
+    {
+        this.y = y;
+        this.x = x;
+
+        lab = new int[y][x];
+        visited = new boolean[y][x];
+        visitedInit();
+        Generate gen = new Generate(x, y, seed);
+        lab = gen.getLavirint();
+
+        try {
+            solve(0, 0, path, visited);
+        }catch(StackOverflowError e) {
+            System.out.println("Stack Overflow Resolve");
+        }
     }
 
 
@@ -111,27 +134,29 @@ public class Resolve {
 //      RAD SA FAJLOVIMA
 //
 
-    private void load(String filename) throws Exception//   Ucitava lavirint iz fajla
+    private void load(String filename)//   Ucitava lavirint iz fajla
     {
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        String[] line = br.readLine().split(" ");
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            String[] line = br.readLine().split(" ");
 
-        this.x = Integer.parseInt(line[0]);
-        this.y = Integer.parseInt(line[1]);
-        lab = new int[y][x];
-        visited = new boolean[y][x];
+            this.x = Integer.parseInt(line[0]);
+            this.y = Integer.parseInt(line[1]);
+            lab = new int[y][x];
+            visited = new boolean[y][x];
 
-        for(int i = 0; i < y; i++)
-        {
-            line = br.readLine().split(" ");
-            for(int j = 0; j < x; j++)
+            for(int i = 0; i < y; i++)
             {
-                lab[i][j] = Integer.parseInt(line[j].trim());
-                visited[i][j] = false;
+                line = br.readLine().split(" ");
+                for(int j = 0; j < x; j++)
+                {
+                    lab[i][j] = Integer.parseInt(line[j].trim());
+                    visited[i][j] = false;
+                }
             }
+            br.close();
+        }catch (IOException e) {
+            System.out.println("Problem reading file");
         }
-        br.close();
     }
-
-
 }
