@@ -20,12 +20,12 @@ public class Generate {
         }
     }
 
-    private boolean checkBounds(int i, int j)//true - polje je van granica, false - polje je unutar granica
+    private boolean checkBounds(int i, int j)//   true - polje je van granica, false - polje je unutar granica
     {
         return i < 1 || i > y || j < 1 || j > x;
     }
 
-    private boolean checkWall(int i, int j) // true ima vise od 1 nule u okruzenju
+    private boolean checkWall(int i, int j)//   true ima vise od 1 nule u okruzenju
     {
         return  (genLab[i - 1][j] ? 1 : 0) +
                 (genLab[i + 1][j] ? 1 : 0) +
@@ -33,7 +33,7 @@ public class Generate {
                 (genLab[i][j + 1] ? 1 : 0) > 1;
     }
 
-    private void generate(int i, int j, RNG rng)
+    private void generate(int i, int j, RNG rng)//   rekurzivna funkcija za generisanje u kojoj unosimo kordinate sledecegpolja
     {
         if(checkBounds(i, j))
             return;
@@ -60,6 +60,9 @@ public class Generate {
         lavirint[0][x - 1] = -99;
     }
 
+//
+//      KONSTRUKTORI  i GETERI
+//
     public Generate(int x, int y)
     {
         this.x = x;

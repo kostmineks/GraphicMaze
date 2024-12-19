@@ -9,7 +9,7 @@ public class Main {
         }
         else
         {
-            Maze.maze(8, 8);
+            Maze.maze(150, 150);
         }
     }
 }

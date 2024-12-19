@@ -76,7 +76,7 @@ public class Resolve {
         }
     }
 
-    public Resolve(int y, int x)
+    public Resolve(int y, int x)//   konstruktor - generise lavirint sa nasumicnim seed-om - resava ga
     {
         this.y = y;
         this.x = x;
@@ -94,7 +94,7 @@ public class Resolve {
         }
     }
 
-    public Resolve(int y, int x, long seed)
+    public Resolve(int y, int x, long seed)//   konstruktor - generise lavirint sa idredjenim seed-om - resava ga
     {
         this.y = y;
         this.x = x;

@@ -1,3 +1,4 @@
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import mars.drawingx.application.DrawingApplication;
 import mars.drawingx.drawing.Drawing;
@@ -6,6 +7,8 @@ import mars.drawingx.drawing.View;
 import mars.drawingx.gadgets.annotations.GadgetAnimation;
 import mars.drawingx.gadgets.annotations.GadgetBoolean;
 import mars.geometry.Vector;
+import mars.input.InputEvent;
+import mars.input.InputState;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,7 +57,7 @@ public class Maze implements Drawing {
             save();
         }
 
-        //Iscrtavanje lavirinta
+        //   Iscrtavanje lavirinta
         DrawingUtils.clear(view, BACKGROUND);
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
@@ -68,7 +71,7 @@ public class Maze implements Drawing {
             }
         }
 
-        // Iscrtavanje resenja
+        //   Iscrtavanje resenja
         if(!have)
             return;
 
@@ -97,19 +100,19 @@ public class Maze implements Drawing {
         }
     }
 
-    public static void maze(String filename)
+
+    public static void maze(String filename)//   Iscrtavanje lavirinta iscitanog iz fajla
     {
         Resolve resMaze = new Resolve(filename);
         maze(resMaze);
     }
-    public static void maze(int y, int x)
+    public static void maze(int y, int x)//   Iscrtavanje generisanog lavirinta velicine X * Y
     {
         Resolve resMaze = new Resolve(y, x);
         maze(resMaze);
     }
-    public static void maze(int y, int x, long seed)
+    public static void maze(int y, int x, long seed)//   Iscrtavanje generisanog lavirinta velicine X * Y sa vec odredjenim seed-om
     {
-        //seed - 115205115129181198L, 150, 150 / 15,15
         Resolve resMaze = new Resolve(y, x, seed);
         maze(resMaze);
     }
@@ -125,7 +128,8 @@ public class Maze implements Drawing {
         DrawingApplication.launch(x * dim, y * dim);
     }
 
-    private void save(){
+    private void save()//   metod za snimanje lavirinta koji prvo prelazi preko postojecih fajlova i nalazi sledec ia zatim red po red ispisuje u .txt fajl
+    {
         int n = 1;
         String path = "res/lav";
         while(new File(path + n + ".txt").exists())
